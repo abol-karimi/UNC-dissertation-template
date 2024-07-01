@@ -1,0 +1,279 @@
+\section{Methodology}
+Since our focus in this paper is formally modeling traffic rules that are applicable at unprotected intersections, we first list the relevant sentences in the drivers' manual and explain their semantics. We then mathematically rewrite these sentences in first order logic and assign rigorous semantics to all the relevant predicates. Finally, we provide some details on converting these first order sentences into statements in Clingo. 
+
+Traffic is a multi-agent system.
+Therefore, each traffic rule determines the \emph{correct} behaviour of only one vehicle, the \emph{ego vehicle},
+with respect to other agents.
+Each vehicle has complete access to its own state but has limited information about its environment.
+Nevertheless,
+the rules assume that the ego vehicle has some minimum knowledge about its environment.
+For example, a vehicle is supposed to know whether it was the first one reaching a four-way-stop or not.
+However, it may not be supposed to know whether another vehicle's left-turn signal means a left-turn or a U-turn.
+
+
+In each traffic scenario,
+the correct behavior (of the ego vehicle) is dependent on three factors:
+the static features (e.g., lane shapes, lane types, lane overlaps, posted signs, etc),
+the dynamic features (e.g., arrival at an intersection, turn signals, etc.),
+and the relevant traffic rules.
+A traffic rule is a statement about the static and dynamic features of a scenario.
+
+Our formal model of traffic rules hence has three components.
+The logical form of a traffic rule is modeled as a first-order-logic formula.
+The predicates in the formula refer to the static and dynamic features
+of the traffic scenario.
+The static features are modeled by mathematical concepts
+such as sets, functions, relations, curves, etc.
+The dynamic features are modeled by \emph{events}.
+An \emph{event} indicates that the truth of a mathematical statement
+transitions from false to true at a specified time.
+Therefore,
+each predicate representing an event has a time parameter.
+
+We follow a top-down approach to model the three components.
+That is,
+for each rule,
+first we determine its high-level logical form and the corresponding predicates,
+then we define each predicate.
+In the following subsection,
+we study the California driver handbook and
+identify the concepts that should be included in our model.
+
+%------------------------------------------
+%------------------------------------------
+\subsection{The Analysis of Driver Handbook}
+\label{sec:rules-analysis}
+Before we delve into the traffic rules examples,
+we note that each phrase in the driver handbook plays a role.
+These roles fall into three main categories:
+\begin{enumerate}
+\item definition of terms,
+\item rule contexts,
+\item rules.
+\end{enumerate}
+A \emph{definition} specifies the meaning of an informal (natural) language term used in the document.
+A rule \emph{context} specifies the circumstances in which a traffic rule applies.
+A traffic \emph{rule} specifies the correct behaviors of each vehicle in applicable contexts.
+
+Now we look at a few sentences from the California driver handbook.
+We focus on the rules that concern the right-of-way at an \emph{uncontrolled intersection},
+i.e. an intersection without `STOP' or `YIELD' signs\cite{FHWA-Unsignalized.2019}.
+\begin{enumerate}
+%-------------------definition of intersection---------------
+\item
+\begin{quote}
+{\em ``An intersection is any place where one line of roadway meets another roadway.
+Intersections include
+cross streets, side streets, alleys, freeway entrances, and
+any other location where vehicles traveling on different highways or roads join each other.''
+\cite[p. 35]{DMV-California.2019}}
+\end{quote} 
+
+Here we see the semantic definition of the term `intersection' 
+which is used in the rest of the driver handbook.
+The definition is followed by some instances of the definition, such as `cross streets' and `freeway entrances'.
+%--------------------yield to inside-----------
+\item \label{rule:yieldToInside}
+\begin{quote}
+{\em ``At intersections without `STOP' or `YIELD' signs,
+yield to traffic and pedestrians already in the intersection or just entering the intersection."
+\cite[p. 36]{DMV-California.2019}}
+\end{quote}
+
+First we observe that the phrase
+``at intersections without `STOP' or `YIELD' signs''
+specifies the context in which the rule applies.
+The context here is
+whenever the ego vehicle is \emph{at} an \emph{uncontrolled intersection}.
+We rewrite the rule (without the context specifier) in the following form
+which makes the logical form of the sentence more transparent:
+\begin{center}
+`If vehicle $V1$ is at the intersection and
+vehicle $V2$ is in the intersection,
+then $V1$ must yield to $V2$.'
+\end{center}
+
+The rule above introduces the predicates
+\emph{must yield to},
+\emph{at the intersection} and \emph{in the intersection}.
+Note that for this rule,
+we can abstract `in the intersection' and `just entering the intersection' as the same.
+(That is, it does not matter whether the whole vehicle or only part of it is in the intersection.)
+In this rule,
+$V1$ is the ego vehicle,
+since the rule requires $V1$ (and only $V1$)
+to take an action.
+
+%--------------------First-in first-out-----------
+\item \label{rule:FIFO}
+\begin{quote}
+{\em ``At intersections without `STOP' or `YIELD' signs,
+yield to the vehicle or bicycle that arrives first."
+\cite[p. 36]{DMV-California.2019}}
+\end{quote}
+
+We rewrite the rule in the following form:
+\begin{center}
+`If vehicles $V1, V2$ are at the intersection and
+$V1$ arrived earlier than $V2$,
+then $V2$ must yield to $V1$.'
+\end{center}
+
+The rule above introduces the temporal event of \emph{arrival at an intersection}.
+The relation `arrived earlier than' suggests that
+the events are sorted by a notion of global clock.
+The original form of the rule explicitly presumes that
+the ego vehicle (i.e. $V2$ in our formulation)
+is \emph{at} the intersection.
+However,
+we can assume that $V1$ is also \emph{at} the intersection since
+the case where $V1$ is \emph{in} the intersection is covered by Rule (\ref{rule:yieldToInside}).
+%----------------------yield to right-------------
+\item \label{rule:yieldToRight}
+\begin{quote}
+{\em ``At intersections without `STOP' or `YIELD' signs,
+yield to the vehicle or bicycle on your right if it reaches the intersection at the same time as you."
+\cite[p. 36]{DMV-California.2019}}
+\end{quote}
+
+First, we rewrite the rule in the following form:
+\begin{center}
+``If vehicles $V1, V2$ are at the intersection,
+$V1$ arrived at the same time as $V2$, and
+$V1$ is on the right of $V2$,
+then $V2$ must yield to $V1$.''
+\end{center}
+
+The relation \emph{arrived at the same time} is again referring
+to the global time of the arrival event.
+This rule introduces `\emph{is on the right of}' as a temporal relation between two vehicles.
+
+%----------------------yield to right-------------
+\item \label{rule:T-intersection}
+\begin{quote}
+{\em ``At `T' intersections without `STOP' or `YIELD' signs,
+yield to traffic and pedestrians on the through road.
+They have the right-of-way."
+\cite[p. 35]{DMV-California.2019}}
+\end{quote}
+
+The context of this rule is a T-intersection.
+The rule introduces the `through road' type.
+The \emph{through road} is sometimes referred to as the \emph{major road}.
+The road attaching to the major road is called the \emph{minor road}.
+We rewrite the rule as follows:
+\begin{center}
+``If vehicles $V1, V2$ are at the intersection,
+$V1$ is on the through road, and
+$V2$ is not on the through road,
+then $V2$ must yield to $V1$.''
+\end{center}
+
+%----------------------Space to cross or enter-------------
+\item \label{rule:spaceToCross}
+\begin{quote}
+{\em ``When crossing or entering city or highway traffic from a full stop,
+signal,
+and leave a large enough gap to get up to the speed of other vehicles.
+You need a gap that is about:
+Half a block on city streets;
+A full block on the highway."
+\cite[p. 67]{DMV-California.2019}}
+\end{quote}
+
+This rule is applicable to uncontrolled T-intersections
+since a vehicle on the minor road must
+cross and/or enter the traffic on the major road.\footnote{To turn right,
+the vehicle must \emph{enter} the traffic approaching from left.
+To turn left,
+the vehicle must \emph{cross} the traffic approaching from left,
+and \emph{enter} the traffic approaching from right.}
+We included this rule since
+it sheds light on the term `on the through road'
+in Rule \ref{rule:T-intersection}.
+That is,
+we consider a vehicle \emph{on the through road} only if
+it is within a certain distance
+(about half or a full block)
+from the intersection.
+
+
+%----------------------yield action-------------
+\item \label{rule:yieldAction}
+The rules \ref{rule:yieldToInside},
+\ref{rule:FIFO},
+\ref{rule:yieldToRight},
+and \ref{rule:T-intersection},
+define when a vehicle has a \emph{yield obligation}.
+However,
+we still have to define what it means \emph{to yield}
+as an action.
+First note that
+`yield' has different meanings in different rules.
+For example,
+\begin{itemize}
+    \item
+        \begin{quote}
+        {\em ``A 3-sided red YIELD sign indicates that you must slow down and be ready to stop, if necessary, to let any vehicle, bicyclist, or pedestrian pass before you proceed."
+        \cite[p. 31]{DMV-California.2019}}
+        \end{quote}
+    \item
+        \begin{quote}
+        {\em ``Do not block the passing lane. Stay out of the far left lane if other traffic wants to drive faster, and yield to the right for any vehicle that wants to pass."
+        \cite[p. 84]{DMV-California.2019}}
+        \end{quote}
+    \item
+        \begin{quote}
+        {\em ``When 2 vehicles meet on a steep road where neither vehicle can pass, the vehicle facing downhill must yield the right-of-way by backing up until the vehicle going uphill can pass."
+        \cite[p. 37]{DMV-California.2019}}
+        \end{quote}
+\end{itemize}
+In the case of uncontrolled intersections,
+the handbook does not explicitly define the yield action.
+Following the meaning of `YIELD' sign,
+we interpret the \emph{yield action}
+either as \emph{slow down} or \emph{stop},
+depending on the context.
+
+\end{enumerate} %-------end list of rules--------
+
+We argue that for each context,
+we must formalize the handbook separately:
+
+First,
+a term may have different meanings in different contexts.
+For example,
+in Item \ref{rule:yieldAction},
+we observed that `yield' has several meanings.
+Therefore,
+one cannot first decide the meaning of a term
+and then use it in irrelevant contexts.
+
+Second,
+whether a rule applies to a context
+depends on the other rules for that context.
+This is because some rules override others.
+In particular,
+if a rule for a special type of intersection
+is inconsistent with a rule for all intersections,
+then the specialized rule overrides the generic one.
+For example,
+Rule \ref{rule:T-intersection} overrides Rule \ref{rule:yieldToRight}:
+In a T-intersection,
+the minor road is on the right of (one side of) the major road,
+but the traffic on the major road has the right of way.
+Therefore,
+one should first pick a context,
+then formalize the applicable rules.
+
+To formalize the whole handbook for a context,
+one may try an iterative approach.
+At each iteration,
+more rules are added to the context
+while maintaining consistency.
+Consistency may require to redefine a previous rule.
+In this paper,
+we take the first step
+by formalizing a few rules for two contexts,
+a generic uncontrolled intersection,
+and an uncontrolled T-intersection.

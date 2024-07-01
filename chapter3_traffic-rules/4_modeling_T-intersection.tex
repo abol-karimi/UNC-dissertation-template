@@ -1,0 +1,61 @@
+\section{Modeling T-intersections}
+\label{sec:modeling_T-intersection}
+
+Most of our modeling for an uncontrolled intersection
+can be used for an uncontrolled T-intersection.
+The additions and alterations needed are as follows.
+
+%--------------------------------------------------
+\subsection{Traffic Rules}
+
+%------------------------
+\subsubsection{Rule (\ref{rule:T-intersection})}
+\begin{center}
+    $ mustYieldToForRule(V1, V2, throughRoadFirst) \leftrightarrow $ \\
+    $ \Big( atTheIntersection(V1) \; \land $\\
+    $ vehicleOnThroughRoad(V2) \; \land $\\
+    $ \neg vehicleOnThroughRoad(V1) \Big). $
+\end{center}
+
+%------------------------
+\subsubsection{Yield action for traffic on minor road}
+\begin{center}
+    $ mustStopToYield(V1) \; \leftrightarrow \; (\exists V2)(\exists L1)(\exists L2) \Big( $ \\
+    $ mustYieldToForRule(V1, V2, throughRoadFirst) \; \land $\\
+    $ requestedLane(V1, L1) \; \land \; requestedLane(V2, L2) \; \land $\\
+    $ overlaps(L1, L2) \; \land \; \neg leftTheLane(V2, L1) \Big). $
+\end{center}
+
+%------------------------
+\subsubsection{Rule (\ref{rule:yieldToInside})}
+For T-intersections,
+we need a different model of the yield action for this rule.
+This is because a vehicle that arrives from the through road
+and is not turning,
+need not stop for a vehicle in front of it that is 
+going the same direction.
+We choose to skip presenting this nuance and
+refer the reader to the implementation file
+provided on the web.\footnote{\label{foot:link}\url{https://tinyurl.com/y4lkrn6g}}
+
+%------------------------------Auxiliary Predicates---------------------------
+\subsection{Auxiliary Predicates}
+
+%-----------------------------------
+\subsubsection{Traffic on through road}
+Recall that we consider a vehicle \emph{on through road}
+only if it has reached within a certain distance from the intersection.
+This is similar to the arrival event for generic uncontrolled intersections
+which is generated when a vehicle reaches to a distance from the intersection.
+Therefore,
+we reuse the arrival event to determine whether a vehicle is on the through road:
+\begin{center}
+    $ vehicleOnThroughRoad(V) \; \leftrightarrow  $ \\
+    $ (\exists F)(\exists T) \Big( arrivedAtForkAtTime(V, F, T) \; \land  $ \\
+    $ forkOnThroughRoad(F) \; \land \; \neg exited(V) \Big). $
+\end{center}
+where
+\begin{center}
+    $ forkOnThroughRoad(F) \; \leftrightarrow \; (\exists L)(\exists E) \Big( $ \\
+    $ laneFromTo(L, F, E) \; \land \; laneCorrectSignal(L, off)  \Big). $
+\end{center}

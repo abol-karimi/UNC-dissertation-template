@@ -1,0 +1,71 @@
+\subsection{Traffic Rules}
+In this section,
+we model the logical form of
+the traffic rules.
+In the fragment of handbook that we analyzed,
+we identified three rules:
+Rule \ref{rule:yieldToInside},
+\ref{rule:FIFO} and \ref{rule:yieldToRight}.
+Here we present the formula for each rule
+using the predicates that were introduced in the analysis.
+%------------------------
+\subsubsection{Rule (\ref{rule:yieldToInside})}
+\begin{center}
+    $ mustYieldToForRule(V1, V2, yieldToInside) \leftrightarrow $ \\
+    $ \Big( atTheIntersection(V1) \; \land $\\
+    $ inTheIntersection(V2) \Big) $
+
+\end{center}
+In our model of the yield obligation,
+we keep track of who must yield to whom,
+and an identifier for the corresponding rule
+(e.g. $yieldToInside$).
+The identifier accounts for the fact that
+the mapping from the yield obligations to the actions
+depends on the rule corresponding to the obligation.
+This will become clear in the definition of
+$mustStopToYield$.
+
+%------------------------
+\subsubsection{Rule (\ref{rule:FIFO})}
+\begin{center}
+    $ mustYieldToForRule(V2, V1, firstInFirstOut) \leftrightarrow $ \\
+    $ \Big( atTheIntersection(V1) \; \land $\\
+    $ atTheIntersection(V2) \; \land $\\
+    $ arrivedEarlierThan(V1, V2) \Big) $
+\end{center}
+
+%------------------------
+\subsubsection{Rule (\ref{rule:yieldToRight})}
+\begin{center}
+    $ mustYieldToForRule(V1, V2, yieldToRight) \leftrightarrow $ \\
+    $ \Big( atTheIntersection(V1) \; \land $\\
+    $ atTheIntersection(V2) \; \land $\\
+    $ arrivedSameTime(V1, V2) \; \land $\\
+    $ isOnRightOf(V2, V1) \Big) $
+\end{center}
+
+%-------------------------
+\subsubsection{The yield action}
+In the case of an uncontrolled intersection,
+there is no explicit definition of the yield action in the driver handbook.
+We interpret the \emph{yield} action to be \emph{stopping and waiting for a certain amount of time}.
+The duration of wait depends on the rule corresponding to the yield obligation.
+For rules $firstInFirstOut$ and $yieldToRight$,
+we define the duration to be 
+until the other vehicle enters the intersection;
+thus the duration is 
+the same as of the yield obligation.
+However,
+for rule $yieldToInside$,
+the duration depends on a notion of lane \emph{reservation}.
+The predicate $mustStopToYield$ defines the yield action:
+\begin{center}
+    $ mustStopToYield(V1) \; \leftrightarrow \; \exists V2 \Bigg( $ \\
+    $ \exists L \Big(  mustYieldToForRule(V1, V2, yieldToInside) \; \land $\\
+    $ requestedLane(V1, L) \; \land \; reservedLane(V2, L) \Big) $\\
+    $ \lor $ \\
+    $ mustYieldToForRule(V1, V2, firstInFirstOut) $ \\
+    $ \lor $ \\
+    $ mustYieldToForRule(V1, V2, yieldToRight) $ \Bigg).
+\end{center}

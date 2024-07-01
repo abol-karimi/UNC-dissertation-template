@@ -1,0 +1,105 @@
+\section{Implementation}
+\label{sec:implementation}
+
+In this section we briefly explain how to implement
+our model of the rules as an ASP program in Clingo.
+The logic programs are made available on the web\footnotemark[\ref{foot:link}].
+It is interesting to note that the relevant rules for unprotected intersections can be specified in approximately 150 lines of code.
+
+An ASP program is a collection of rules of the form:
+\begin{minted}[fontsize=\footnotesize]{prolog}
+h :- p_1, ..., p_n, not p_{n+1}, ..., not p_{n+m}.
+\end{minted}
+The intended meaning of the above sentence is
+$$ p_1 \land \dots \land p_n \land  \neg p_{n+1} \land \dots \land \neg p_{n+m} \rightarrow h $$
+
+%---------------------------------
+\subsection{Conjunctive condition}
+\subsubsection{Positive conjuncts}
+Rule (\ref{rule:yieldToInside}) is straightforwardly implemented as:
+\begin{minted}[fontsize=\small]{prolog}
+mustYieldToForRule(V1, V2, yieldToInside):-
+  atTheIntersection(V1),
+  inTheIntersection(V2).
+\end{minted}
+
+\subsubsection{Positive and negative conjuncts}
+\begin{minted}[fontsize=\small]{prolog}
+atTheIntersection(V):-
+  arrived(V),
+  not entered(V).
+\end{minted}
+
+%----------------------------------
+\subsection{Existential Quantifier}
+If we have an existential quantifier
+over variables ($T1$ and $T2$ here)
+that only appear in positive conjuncts:
+
+\begin{minted}[fontsize=\small]{prolog}
+arrivedEarlierThan(V1, V2):-
+  arrivedAtTime(V1, T1),
+  arrivedAtTime(V2, T2),
+  T1 < T2.
+\end{minted}
+
+If the existentially quantified variable is referenced only once,
+we do not need to name it.
+An underscore represents a nameless variable.
+For example,
+
+\begin{minted}[fontsize=\small]{prolog}
+arrived(V):-
+  arrivedAtForkAtTime(V, _, _).
+\end{minted}
+
+%---------------------------------
+\subsection{Disjunctive condition}
+If the definition of a predicate is
+a disjunction of two subformulas,
+then the definition can be broken down into two definitions
+where each subformula is the definition.
+
+For example,
+consider the definition of $mustStopToYield$ for uncontrolled intersections.
+The condition can be written in a disjunctive form,
+by distributing the existential quantifier over disjunctions:
+\begin{center}
+    $ mustStopToYield(V1) \; \leftrightarrow \; \Bigg( $ \\
+    $ (\exists V2)(\exists L) \Big( mustYieldToForRule(V1, V2, yieldToInside)  $\\
+    $ \; \land \; requestedLane(V1, L) \; \land \; reservedLane(V2, L) \Big) $\\
+    $ \lor $ \\
+    $ \exists V2 \Big( mustYieldToForRule(V1, V2, firstInFirstOut) \Big) $ \\
+    $ \lor $ \\
+    $ \exists V2 \Big( mustYieldToForRule(V1, V2, yieldToRight) $ \Big) \Bigg).
+\end{center}
+
+Then we can implement $mustStopToYield$ 
+by the following three rules:
+\begin{minted}[fontsize=\small]{prolog}
+mustStopToYield(V1):-
+  mustYieldToForRule(V1, V2, yieldToInside),
+  requestedLane(V1, L),
+  reservedLane(V2, L).
+  
+mustStopToYield(V):-
+  mustYieldToForRule(V, _, firstInFirstOut).
+  
+mustStopToYield(V):-
+  mustYieldToForRule(V, _, yieldToRight).
+\end{minted}
+
+
+The traffic objects,
+i.e. vehicles, lanes, arrival boxes, entrance boxes and exit boxes,
+are implemented as polygon meshes in Unreal Engine.
+We use Unreal Engine's built-in collision checking
+to determine whether two objects overlap.
+This enables an efficient and scalable computation of atomic predicates.
+If both objects are static,
+we query the collision checking only once at the beginning of a scenario.
+Otherwise,
+we ask Unreal Engine to generate collision events
+when a dynamic object begins or ends overlapping with other traffic objects.
+Unreal Engine's game time is used as the global time.
+We discretize this time to timestamp the events.

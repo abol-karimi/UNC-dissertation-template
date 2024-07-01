@@ -38,20 +38,33 @@
 
 %---------------------------------------------------------
 
-To successfully integrate autonomous vehicles as a mode of transportation, we must consider the societal and engineering requirements of these systems.
+To successfully integrate autonomous vehicles as a mode of transportation, we must test these systems against their end-to-end requirements.
 %
-For example, when AVs and humans (pedestrians, bicyclists, human-driven vehicles) share the road, they must follow the same traffic rules.
+When AVs and humans (pedestrians, bicyclists, human-driven vehicles) share the road, they must follow the same traffic rules.
 %
 Using the common traffic rules (written for human drivers) as an engineering requirement poses a challenge due to the ambiguity of the natural language.
 %
 On the other hand, an AV is fundamentally different from a human, and a simple road test is not sufficient to assess an AV's compliance and skills.
+%
+This calls for automated, systematic and scalable testing techniques.
+%
+The focus of this dissertation is on simulation-based testing of the traffic-rules requirements.
+
 
 %--- Contributions
-I first formalize the traffic rules in first-order logic (FOL) since it can model objects and predicates, which narrows the gap between human intuition and machine language.
+This dissertation develops techniques for systematic exploration of the test-case space of autonomous vehicles based on two crucial concepts: \emph{complexity} and \emph{coverage}.
 %
-In particular, I choose logic programming which enables automated reasoning about traffic using off-the-shelf solvers.
+Here, these concepts are formalized with respect to the traffic rules requirements.
 %
-Then I present algorithms for testing the compliance of AVs to traffic rules using scenario-based approaches.
-
-
+The efficiency of finding bugs is improved by incrementally increasing the complexity of a test-case, namely making it harder for an AV to pass a test-case.
+%
+On the other hand, the diversity of a test-suite is improved by guiding the test-case generation towards increasing the coverage of a test-suite.
+%
+The framework for formalization of the traffic rules is made more amenable to vetting by the authorities and regulators by narrowing the gap between human intuition and machine language.
+%
+This is achieved by formalizing traffic rules in first-order logic (FOL) which allows modeling objects and predicates.
 \clearpage
+
+
+
+% The gap between human intuition and machine language is narrowed by formalizing traffic rules in first-order logic (FOL) which allows modeling objects and predicates.

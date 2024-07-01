@@ -1,0 +1,47 @@
+\section{Threats to Validity}
+
+\textbf{Internal Validity:} Internal validity threats concern factors in the
+experiments that may affect the results.
+% 
+We have chosen an appropriate baseline (random generation) and have repeated the experiments for 10 times (each run for 24 hours) and plotted the median of the random runs.
+% 
+Furthermore, none of the AV agents tested were developed in-house, but all the agents are publicly available.
+
+\textbf{External Validity:} The primary threat to external validity of our technique is the applicability of the results in a physical deployment.
+% 
+Since all the experiments are conducted in a simulation environment, the vehicle parameters such as velocity profiles and trajectories might not be practical.
+% 
+This would be an issue with any simulation based test-case generation for AVs.
+% 
+To mitigate this, we have made our evaluation platform to be able to test any AV agent compatible with CARLA Leaderboard 2.0.
+% 
+Our extensive experimentation to include 4 different publicly available agents and assessing the mutual coverage of the test results is to ensure that the proposed techniques works for as many agents as possible.
+%
+Furthermore, our evaluation looks at AVs with different information available to them --- from TF++ where the AV agent infers the road network and the behavior of other AVs from sensors --- to CALRA Autopilot that has map and other agent information provided to it from the simulation engine. 
+% 
+However, since we do not evaluate our technique on any \emph{real} AV implementation, this threat remains unresolved.
+
+\textbf{Construct Validity:} In this paper we propose a new notion of coverage --- predicate coverage --- where the predicates model aspects of the AV behaviors required for inferring AV's compliance with traffic rules.
+% 
+Given that we also propose a new predicate guided fuzzing technique that improves the predicate coverage, we acknowledge the circularity in the argument.
+% 
+However, such circularity would be a part of any coverage guided fuzzing technique --- the fuzzing technique customized to improve the coverage of a given metric, indeed improves the coverage of the metric.
+% 
+We believe that since the predicates of AV are predicates on the behavior of AV and not just the code of software, the increase in coverage does lead to new behaviors.
+% 
+
+
+% and highlight that purely using code coverage techniques do not outperform random scenario generation.
+% % 
+% Since the predicates of interest are a function of physical AV behaviors, 
+
+% \begin{itemize}
+%     \item External Validity. All these are generated in simulation environment. Validity for real platforms is still unclear. To mitigate this, 4 different types of agents. Further, our system can work with any AV agent that can work with CARLA leaderboard 2.0
+%     \item Construct Validity. Circularity --- new metric and fuzzing that optimizes for this metric is better.
+% \end{itemize}
+
+
+% \begin{itemize}
+%     \item I have seen people just do fluff.
+%     \item Add two paras as to what are some challenges.
+% \end{itemize}

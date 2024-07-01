@@ -1,0 +1,86 @@
+\section{Related work}
+In \cite{Xia.2017, Xia.2018, Gao.2019}, a \emph{complexity index} is defined based on some \emph{influence factors} and their relative importance.
+%
+The influence factors are based on the functionality of the AV that is going to be tested and may include a mixture of perception-related and planning-and-control-related factors such as weather, rapid changes in light, lane line clarity, road curvature, road congestion, etc.
+%
+These factors are derived from technical specifications, naturalistic traffic data, etc.
+%
+The contribution of each factor to the complexity index is derived with a quantitative and subjective evaluation, the Analytic Hierarchy Process (AHP).
+%
+In contrast to subjective assessments, we rely objectively on the pass-fail criteria alone to automatically decide if a test-case is more complex than another.
+%
+We give sufficient conditions that guarantee that a test-case $B$ is at least as complex as a test-case $A$, and a certificate to why $B$ is more complex than $A$.
+
+
+%---scene complexity
+Wang et al. \cite{Wang.2018} give a measure of complexity of scenarios gathered from an AV.
+%
+They first define a measure of scene complexity, then calculate its distribution across a scenario as a measure of its complexity.
+%
+That is, the spatio-temporal relations between two consecutive scenes are ignored.
+%
+Therefore, two scenarios with a completely different spatio-temporal development but the same distribution of scene complexity would be treated the same.
+%
+The \emph{scene complexity} is a weighted sum of \emph{road semantic complexity} and \emph{traffic element complexity}.
+%
+\emph{Road semantic descriptors} are features that are subjectively selected to contribute to the complexity measure, and obtained via manual annotations for a small subset of the data and generalized with supervised learning.
+%
+\emph{Traffic element complexity} is quantified in terms of non-egos' distance and orientation relative to the AV (ego), which makes their definition fall under criticality rather than complexity in our terminology above (adopted from \cite{Riedmaier.2020}).
+
+
+Qi et al. \cite{Qi.2019} propose a manual process to characterize a test-case based on a finite number of failing trajectories of ego.
+%
+The causes of failure are analyzed to make a list of Scenario Character Parameters (SCPs) which could be related to perception, planning or control aspect of the driving task.
+%
+In contrast, our characterization of a test-case is with respect to all (infinitely many) failing ego behaviors.
+%
+Furthermore, our algorithm decides the cause of failure of a behavior automatically from the pass-fail criteria.
+
+%---Scenario generation methods
+Apart from a few papers reviewed above that generate complex test-case scenarios, most literature on scenario generation/selection focus on other qualities and quantities of scenarios, such as \emph{similarity} \cite{Harder.2021}, \emph{criticality} \cite{Klischat.2019, Zhong.2021}, \emph{corner cases} \cite{OKelly.2018}, etc.
+%
+These techniques include a variety of algorithmic paradigms such as  knowledge-based methods \cite{Li.2020}, data-driven methods \cite{OKelly.2018}, optimization-based search \cite{Klischat.2020, Feng_Methodology.2020, Feng_CaseStudies.2020}, genetic algorithms \cite{Klischat.2019, Calo.2020, Zhong.2021}, synthesis from formal specification \cite{Klischat.2020, Tuncali.2019}, probabilistic search \cite{Fremont_testing.2020, Tuncali.2016}, combinatorial search \cite{Tuncali.2019, Gao.2019, Xia.2018}, etc.
+%
+Only a few of the proposed techniques handle traffic rules, especially right-of-way, at intersections.
+%
+In a survey on performing safety assessment of autonomous vehicles~\cite{Riedmaier.2020}, the authors stress the importance of scenario generation at intersections.
+%
+Here, we mention a few examples that are more related to our work.
+
+
+%---probabilistic programming
+Fremont et al. \cite{Fremont_testing.2020} use Scenic as a probabilistic programming DSL to generate scenarios.
+%
+In contrast, we use Scenic only as an interface to CARLA, and generate the scenarios by solving logic programs.
+%
+An advantage of logic programming over probabilistic programming is that a logic solver gives coverage guarantee over its search space.
+%
+For example, in Step 2 of our algorithm, the ASP solver covers all possible order relations between events, where ASP's search space is restricted by the order relations that are fixed in Step 1.
+
+
+%---intersections
+Tuncali et al. \cite{Tuncali.2019}, also Klischat and Althoff \cite{Klischat.2020} generate test-cases for intersections from requirements and formal specifications.
+%
+However, they do not include right-of-way traffic rules.
+
+
+%---solvability and complexity certificates
+Calo et al. \cite{Calo.2020} use genetic algorithms to find \emph{avoidable collision scenarios}.
+%
+These are scenarios in which a particular AV crashes but it could have avoided the collision.
+%
+This is somewhat similar to our complexity and solvability certificates: a behavior that fails a test-case and a behavior that passes the same test-case.
+%
+However, our goal is different, i.e. finding a test-case that is more complex than a given test-case.
+%
+Also, our pass-fail criteria are not limited to collisions.
+
+
+%---synthesis using SMT
+In \cite{kim2019test} SMT solving is used to generate test-cases.
+%
+To generate trajectories, they use a predetermined geometric class, say piecewise linear or spline curve. 
+%
+Therefore, the generated trajectory is not necessarily feasible for the steering geometry of a vehicle, say with Ackermann steering.
+%
+In contrast, we satisfy the steering constraints using simulation and closed-loop control, and use SMT only for generating the longitudinal speed.

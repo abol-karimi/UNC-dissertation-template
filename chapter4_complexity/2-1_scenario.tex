@@ -1,0 +1,46 @@
+\subsection{Scenario}
+%---scene
+A \emph{scene} defines the state of the environment at an instant in time.
+%
+The environment includes the \emph{scenery}, \emph{dynamic elements}, and \emph{actors}.
+%
+The \emph{scenery} are the geo-spatially stationary elements and all the metric, semantic and topological information they entail, such as a road, its width, an intersection and its intersecting lanes.
+%
+A \emph{dynamic element} is movable (moving or able to move), and an \emph{actor} is an element that acts on its own, which are both only cars in our generated scenarios.
+
+%---scenario
+A \emph{scenario} is a sequence of scenes, starting with an \emph{initial} scene and  spanning over a certain amount of time.
+%
+\emph{Actions and events} constitute any changes between consecutive scenes.
+%
+These changes include movement of a car, change in its speed, activating a turn signal, entering or exiting a region, the speed reaching a threshold, etc.
+%
+A scenario may specify a \emph{goal} for an actor, and the actor may use it to select what action(s) to take.
+%
+For example, reaching the end of a particular lane may be the goal of a car.
+
+
+%---partial scenarios and their execution
+A scenario can be specified \emph{partially}.
+%
+Technically, a partial scenario corresponds to a set of scenarios that share the specified information.
+%
+For example, the state of an actor in some scenes may be left unspecified.
+%
+If the initial scene is fully specified, we can \emph{execute} the (partial) scenario by starting with the initial scene, and applying the actions and events at each scene to get the next scene, until the specified duration has passed.
+%
+The outcome of the execution is a fully specified scenario.
+
+
+%---This paper
+In this paper, we generate partial scenarios for simulation-based testing.
+%
+Each generated scene specifies all non-egos completely, whereas ego is specified in the initial scene only.
+%
+There is a fixed \emph{time step} between each pair of consecutive scenes.
+%
+The execution of the scenario only determines the description of the ego in each scene.
+%
+In the initial scene, ego is on an incoming lane to an intersection.
+%
+The goal of ego is to reach a designated outgoing lane.

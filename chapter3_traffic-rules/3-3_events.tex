@@ -1,0 +1,47 @@
+\subsection{Events}
+
+%-------------------------------
+\subsubsection{Time stamp}
+A \emph{time stamp} is a numerical representation of the global clock.
+In real time,
+one event may strictly precede another but the time difference be imperceptible to humans.
+Hence, it is reasonable to assume that
+real time events that are closer (in time) than a threshold,
+happened at the same time.
+Therefore, we adopt a discrete view of time.
+That is, a timestamp is simply the number of time steps since the beginning of a scenario.
+The length of a time step is a hyperparameter to our model.
+%-------------------------------
+\subsubsection{Arrival event}
+The predicate $arrivedAtForkAtTime(V, F, T)$ represents
+the event of vehicle $V$ arriving at the intersection
+from fork $F$ at time $T$.
+The \emph{arrival time} is when the vehicle intersects with the \emph{arrival box}.
+%-------------------------------
+\subsubsection{Turn signal event}
+The predicate $signaledAtForkAtTime(V, S, F, T)$ represents
+the event of vehicle $V$ using turn signal $S$
+when it arrives at fork $F$ at time $T$.
+%----------------------
+\subsubsection{Entrance event}
+The predicate $enteredForkAtTime(V, F, T)$ represents
+the event of vehicle $V$ entering (branches of) fork $F$ at time $T$.
+An \emph{entrance box} represents
+the border between the incoming lane and the branches of $F$.
+%----------------------
+\subsubsection{Lane leave event}
+The predicate $leftLaneAtTime(V, L, T)$ represents
+the event of vehicle $V$ leaving lane $L$ completely at time $T$.
+That is,
+at time $T$,
+intersection of $V$ and $L$ transitions from nonempty to empty.
+%----------------------
+\subsubsection{Exit event}
+The predicate $ exitedFromAtTime(V, E, T) $ represents the event of
+vehicle $V$ leaving the intersection
+from the \emph{exit} $E$
+at time $T$.
+The time $T$ is when the vehicle's body stops intersecting
+the exit $E$'s extent box.
+The \emph{extent box} is simply a box-shaped subset of the 3D space.
+

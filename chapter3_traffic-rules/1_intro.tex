@@ -1,0 +1,89 @@
+\section{Introduction}
+According to a report by Governors Highway Safety Association \cite{Hedlund.2017}, ``all vehicles on the road will not be autonomous for a very long time, perhaps never. Until then, autonomous vehicles must share the road with vehicles driven by humans,'' so ``the short-run challenge is to manage a world with a mix of driver-operated and autonomous vehicles.''
+One approach to handle the mixture of autonomous vehicles (AVs) and human drivers is to change current rules and traffic infrastructure to incorporate AVs.
+This approach seems inadequate for at least two reasons:
+the high cost of new infrastructure and drivers' education, and lack of industry standards in AV technologies since the sector is still in its experimental stages.
+Another approach is to design AVs such that they abide by the current traffic rules.
+This calls for a set of rules that are both machine and human understandable, that is, it requires a set of statements in natural language as well as their mathematically precise representation.
+
+
+Considering the ambiguity and complexity of natural language, the problem is to develop a formal version of traffic rules that is machine-understandable.
+The challenge is to preserve the human understanding of the rules as much as possible.
+A formalized version of the rules removes the ambiguities in natural language and makes all the assumptions explicit.
+This provides the ground truth (of legal behaviour) that can be used in designing AVs, testing and certifying AVs, fault determination in accidents, automating drivers' education, ADAS\footnote{Advanced Driver-Assistance System} features, etc.
+
+Currently, self reported disengagement rates and traffic incidents\footnote{\url{https://www.dmv.ca.gov/portal/dmv/detail/vr/autonomous/testing}} by the AV companies is used as a benchmark for measuring the efficacy of autonomous vehicles. For a safety critical system such as autonomous vehicles, we believe that disengagements and traffic incidents are a very weak form of evidence for safety assurance. A better form of evidence would be all incidents that are violations of traffic rules. Finally, for any safety critical system, one has to establish a rigorous basis for evaluating functional correctness. For all these reasons, we believe that a rigorous mathematical model of traffic rules is an essential part of certification procedures for autonomous vehicles.
+
+In this paper,
+we present a framework to formalize traffic rules.
+We use California's driver handbook as a working example.
+While we focus here on a subset of the rules,\footnote{i.e. right-of-way rules at uncontrolled intersections}
+the goal is to formalize all of the driver handbook using this framework.
+We follow a top-down approach to formalize the rules.
+That is,
+we first study the driver handbook to identify
+the logical form of the rules and the concepts that they employ.
+We model the rules as formal logic sentences
+using atomic predicates that represent the concepts employed.
+The concepts referred to by the atomic predicates
+are modeled using spatio-temporal mathematical objects.
+The separation of logical form and mathematical concepts
+provides flexibility to incorporate various types of traffic rules in the driver handbook.
+
+Intersections are the main area where accidents happen.
+According to the Fatality Analysis Reporting System (FARS) and National Automotive Sampling System-General Estimates System (NASS-GES) data, at least 47\% of the estimated 11,275,000 crashes in the United States in 2015 \cite{DOT.2017} were intersection-related.
+Furthermore,
+most of the accidents involving autonomous vehicles also happened at intersections~\cite{CADMVdocumentation,nhtsareport}.
+According to Federal Highway Administration, ``unsignalized intersections are of particular concern because they comprise the vast majority of intersections in the U.S.''\cite{FHWA-Unsignalized.2019}
+The rules for \emph{uncontrolled intersections} (i.e. without ``STOP'' or ``YIELD'' signs)
+apply to all types of conventional unsignalized intersections.
+Furthermore,
+in case of a blackout,
+signalized intersections should be treated as all-way-stops.\cite{DMV-California.2019}
+Therefore,
+uncontrolled intersection is an interesting case study to demonstrate our framework.
+
+To show the practicality of this approach, we encode the traffic rules in logic programming paradigm using answer set programming (ASP). 
+Using this framework, one can decide whether a given action of a vehicle in a traffic scenario respects all the traffic rules.
+Further, one can also design a \emph{correct controller} such that all of its actions will respect the traffic rules. 
+We integrate this correct controller into the CARLA simulator and simulate various traffic scenarios at various four-way and three-way intersections.
+CARLA\cite{Dosovitskiy.2017} is an open-source simulator for autonomous driving research.
+Starting at CVPR 2019 (Computer Vision and Pattern Recognition) conference, CARLA organizes the CARLA Autonomous Driving Challenge \cite{CARLA-Challenge.2019}.
+To create a traffic environment, CARLA has a built-in vehicle driver called \emph{autopilot}.
+For unsignalized intersections,
+autopilot (not AI or manually driven) vehicles
+pass the intersection only one at a time.
+However, our controller implements several rules:
+first-in-first-out,
+yield-to-right,
+yield-to-inside, etc.
+This makes the traffic more realistic and also increases the traffic throughput.
+
+The ambiguity of the natural language requires that we try different formalizations and study the emergent traffic behaviour from following each version. 
+Our framework facilitates improving the model iteratively by specifying the rules as a declarative logic program.
+One can easily add conditions to the rules, or add more rules to see the interactions.
+Furthermore, changing the logic program does not require compiling CARLA's code.
+
+We use Clingo to implement and evaluate the traffic rules. Clingo is an open-source toolchain for answer set programming (ASP) \cite{Gebser.2011}.
+ASP is a logic programming paradigm.
+The syntax of Clingo is similar to Prolog but the semantics is different.
+The SAT-solving techniques used in ASP solvers give them a significant performance advantage over Prolog.
+Our choice of selecting ASP as the paradigm for modeling traffic rules is a result of several design choices. 
+First, we want the mathematical representation to be fairly easy to understand.
+Second, we want the model to be transparent, that is, given a statement in the drivers manual provided by the DMV, we would like to map it to a corresponding sentence (or a collection of sentences) in the model.
+Finally, we want the rules to be modular, that is, the rules can be adopted to other traffic scenarios with minor modifications. As we shall see in the rest of the document, we provide an intuitive, transparent, and modular model for traffic rules using ASP.
+
+We summarize the contributions of this paper as follows:
+\begin{enumerate}
+    \item
+    We provide a formalization of traffic rules that is straightforward
+    from the human-understandable informal version to the machine-understandable formal version.
+    This bridges the gap between the high-level human reasoning to the low-level machine instructions.
+    \item
+    Our formalization and implementation of the rules is efficiently executable.
+    Unreal Engine computes the spatio-temporal atomic predicates,
+    and the Clingo ASP solver evaluates the logical formulas over the atomic predicates.
+    \item
+    Using a declarative logic program to implement the rules creates great flexibility
+    in iteratively improving the model.
+\end{enumerate}

@@ -1,0 +1,123 @@
+\section{Applications}
+\label{sec:applications}
+
+%------------------------------------------------
+\subsection{Detecting violations of traffic rules}
+In the previous section,
+we used the formalized rules to determine
+the correct action obligated by the right-of-way rules.
+A \emph{violation} happens when
+a vehicle takes an action inconsistent with the rules.
+Similar to traffic rules,
+there can be several ways to formalize
+the notion of violation.
+One approach is to use the same predicates (used in traffic rules)
+to define a violation.
+
+For example,
+in our case study of uncontrolled intersections,
+$mustStopToYield$ at the intersection is the obligated action.
+Therefore,
+we formulate violations as
+entering the intersection while a $mustStopToYield$ is required:
+Vehicle $V$ violates a rule at time $T+1$
+if and only if
+\begin{center}
+    $ P_T \models mustStopToYield(V) \; \land \; P_{T+1} \models entered(V) $
+\end{center}
+where $P_T$ is the logic program at time $T$.
+
+
+%------------------------------------------------
+\subsection{Controlling CARLA's Autopilot vehicles}
+Using the predicate $mustSlowToYield$ and $mustStopToYield$
+we can determine the correct action for an AV at a given point in time.
+We only need to evaluate the ASP when a new event happens.
+Each intersection has a \emph{monitor} that tracks the events.
+When a vehicle arrives at the intersection, the monitor starts tracking the events of that vehicle until the vehicle exits the intersection.
+When a vehicle exits the intersection, all of its events are removed from the monitor.\footnote{If a vehicle is not present in the context of a rule, then it is irrelevant to the rule.
+For example,
+if the ego vehicle is at an intersection,
+vehicles that have not arrived at that intersection nor are in the intersection are irrelevant.}
+Since each intersection has finite space, each monitor has a bound on the number of vehicles in its event list.
+Assuming that each vehicle only moves forward along its path, each vehicle generates a bounded number of events from arrival to exit.
+Therefore, for each intersection, there is a bound on the size of the event list, hence a bound on the size of the logic program.
+
+To test our model,
+we used CARLA (version 0.9.6) on an Ubuntu 18.04 on
+a laptop with Intel Core i7-8750H processor,
+32GB RAM, and 
+NVIDIA GeForce GTX 1070 Max-Q graphics card.
+
+We deployed our traffic controller on
+an uncontrolled multi-lane four-way intersection in a virtual town called Town05 in CARLA.
+With 120 vehicles (sedans, trucks and motorcycles) on the map,
+the simulator runs around 40 frames per second.
+We also deployed our traffic control on
+various uncontrolled intersections of other types in different maps:
+single-lane and multi-lane three-way intersection,
+single-lane four-way intersection, and
+single-lane and multi-lane T-intersection.
+A few videos of the simulations are made available on the web.\footnotemark[\ref{foot:link}]
+
+Here we point out a few of the scenarios that are simulated and are in the videos:
+
+\begin{enumerate}
+    \item 
+    At a four-way intersection,
+    $V1$ arrive at the same time as $V2$ from two different lanes of the same street.
+    According to our definition of $isOnRightOf$,
+    none of the vehicles is on-the-right-of the other,
+    hence neither need to yield to the other
+    (based on the implemented rules.)
+    See the beginning of (the video of) Scenario 1.
+    Here,
+    $V1$ and $V2$ are the vehicles from the south side of the intersection.
+    \item
+    At a four-way intersection,
+    $V1$ arrives at the intersection when $V2$ is in the intersection
+    but their intended paths do not intersect.
+    According to Rule \ref{rule:yieldToInside},
+    $V1$ must yield to $V2$.
+    However $V1$ need not stop for $V2$,
+    based on our definition of the yield action.
+    See the beginning of Scenario 1.
+    Here $V1$ is the vehicle from north, and
+    $V2$ is either of the vehicles from south.
+    \item
+    At a four-way intersection,
+    $V1$ arrives at the intersection when $V2$ is in the intersection
+    and the path of $V2$ intersects $V1$'s requested lane.
+    Hence $V1$ must wait until $V2$ leaves $V1$'s requested lane.
+    See the beginning of Scenario 1.
+    Here,
+    $V1$ is the vehicle on the east side of the intersection, and
+    $V2$ is the vehicle from left lane of the south side.
+    \item
+    In Scenario 4,
+    we have a single-lane three-way intersection
+    so each incoming lane is either on the right or on the left of another.
+    \item
+    In a T-intersection,
+    $V1$ arrives from the minor road while $V2$ is on the through road.
+    Hence $V1$ must stop for $V2$,
+    according to Rule \ref{rule:T-intersection}.
+    Furthermore,
+    before $V2$ exits,
+    $V3$ arrives from the through road.
+    Then $V1$ must wait for $V3$ as well.
+    Therefore,
+    $V1$ waits until there is no vehicle on the through road.
+    See Scenario 5.
+    \item
+    In Scenario 6,
+    we have a T-intersection where
+    the minor road is not perpendicular to the major road.
+\end{enumerate}
+
+
+The behavior of all of the vehicles in the videos is completely decided by the traffic controller that respects all the traffic rules and is generated by ASP. For each of these videos, the events generated by the vehicles entering and exiting the intersection, and the reasoning being performed for arriving at the correct action for each vehicle is being displayed on the right side and the corresponding actions of each of the autonomous vehicle can be seen on the left side of the video. \emph{To the best of authors knowledge, this is the first instance where the actions of autonomous vehicles in a simulated environment are synthesized based on the rules that they need to obey.}
+
+
+
+

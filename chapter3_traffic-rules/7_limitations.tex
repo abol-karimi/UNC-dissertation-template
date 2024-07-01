@@ -1,0 +1,53 @@
+\section{Limitations}
+\label{sec:limitations}
+
+%-----------------------------
+\subsection{Traffic flow assumptions}
+In our model,
+we presupposed some regularity assumptions
+which make the definition of rules simpler.
+Therefore,
+our model is applicable to a traffic scenario
+only if the assumptions are satisfied.
+A behaviour that violates such regularity assumptions
+is more complicated or unpredictable.
+
+For example,
+we assumed that vehicles' paths through the intersection
+will be consistent with their turn signal.
+This assumption
+is true for CARLA's autopilot vehicles.\footnote{For autopilot vehicles,
+upon approaching an intersection,
+a predefined route is randomly assigned
+and the corresponding turn signal and waypoints (for the vehicle controller) are determined.
+}
+However,
+AI or manually driven vehicles may violate this assumption,
+say by not using their signal when turning.
+Another example is the assumption that
+vehicles move only forward along a requested lane
+and do not backup in the intersection.
+
+To tame the complexity of irregular behaviours,
+the driver handbook has the following provision:
+\begin{quote}
+    ``Never assume other drivers will give you the right-of-way.
+    Yield your right-of-way when it helps to prevent collisions."
+    \cite[p. 34]{DMV-California.2019}
+\end{quote}
+CARLA's autopilot has a basic collision-avoidance system
+based on forward free distance.
+
+Another remedy would be to
+encode the assumptions as a logic program and
+use the standard definitions only if the program has a solution.
+That is,
+the logic program defines a guard on validity of the standard definitions.
+
+%-----------------------------
+\subsection{Nontrivial lane intersections}
+In \S \ref{sec:modeling_uncontrolled},
+we assumed that a vehicle enters and leaves an overlapping lane at most once.
+If this assumption does not hold for a particular intersection,
+one has to replace that predicate with a predicate that is true only when the vehicle has left the last intersecting part of the intersecting lane. The latter predicate would be slightly more complicated to implement in Unreal Engine,
+since one has to keep track of all the pieces of the overlap between two lanes.

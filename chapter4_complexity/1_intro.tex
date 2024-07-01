@@ -1,0 +1,103 @@
+\section{Introduction}
+
+
+% [Foundation]
+% \begin{itemize}
+% \item Traffic intersections are very tricky.
+% \item Most accidents happen.
+% \item Coordinated resource sharing in real time.
+% \item Traffic rules, human understanding.
+% \item Autonomous vehicles in large scenarios.
+% \item This would also include scenarios where other vehicles violate the traffic rules.
+% \end{itemize}
+
+% [Testing]
+% \begin{itemize}
+% \item RAND corporation paper.
+% \item Lots and lots of miles with unchanged code to give evidence of correct functioning.
+% \item Virtual environments with photo-realistic simulations.
+% \item Systematic techniques for generating dynamic scenarios.
+% \item Will help in testing and debugging in a systematic manner.
+% \end{itemize}
+
+
+%---scenario-based approaches, and complexity
+There are uncountably many traffic scenarios!
+%
+This is a challenge for scenario-based approaches for specifying the requirements and Operational Design Domain (ODD), development, testing, falsification, and certification of Autonomous Vehicles (AVs).
+%
+A variety of methods are proposed in the literature to explore different subsets of the infinite space of test-case scenarios.
+%
+Riedmaier et al. \cite{Riedmaier.2020} survey a category of test-case generation methods that are based on some notion of \emph{complexity}.
+%
+Here, \emph{complexity} is a property of a test-case, i.e. determinable before execution, and so independent of the performance of a particular AV.
+%
+The idea is that the probability of a failure increases as the complexity of the test-cases increase.
+%
+Complexity is distinguished from \emph{criticality}, which is an assessment of the performance of an AV in a scenario, and is determinable only after test-case execution.
+%
+Complexity is similar to \emph{difficulty} in game design~\cite{Aponte.2011}, where a more difficult level should be more challenging with respect to all possible players.
+
+
+%---scenarios
+A \emph{scenario} is a sequence of \emph{scenes}.
+%
+A \emph{test-case} is a scenario in which the description of \emph{ego} (i.e. vehicle-under-test) in the scenes is unspecified, and has some \emph{pass-fail} criteria that determine what ego behaviors would pass the test-case \cite{Ulbrich.2015}.
+%
+Bagschik et al. \cite{Bagschik.2018} give a five-layer ontology for a scenario: roads, traffic infrastructure, temporary changes in roads and infrastructure, objects, and weather.
+%
+One aspect of complexity concerns the perception task, e.g. detecting the road boundaries and traffic signs, tracking objects, etc.
+%
+For example, faded lane markings, occlusions and rainy weather can make perception more complex.
+%
+On the other hand, an AV with complete information about its environment still has the challenge of navigating around to pass a test-case, e.g. avoiding collisions, reaching its goal, and following traffic rules.
+%
+That is, another aspect of complexity concerns the planning and control task.
+%
+In this paper we address the latter.
+
+
+%---why intersections
+% We focus our test-case generation on intersections and their traffic rules.
+% %
+% Vehicles are prone to accidents at intersections.
+% %
+% Around 47\% of the estimated 11 million crashes in the United States in 2015 were intersection related~\cite{DOT.2017}.
+% %
+% Given that vehicles from different roads share and coordinate their actions at intersections, a higher rate of accidents at intersections is not fully surprising.
+% %
+% On the other hand, ``all the vehicles on the road will not be autonomous for a long time''~\cite{Hedlund.2017}, so AVs should comply with the traffic rules that are observed by human drivers.
+% %
+% By studying the disengagements and accidents of autonomous vehicles at intersections~\cite{CADMVdocumentation,nhtsareport}, one can observe that the current autonomous vehicles have not addressed these challenges, yet.
+
+
+
+%---this paper
+First, we propose a formal definition of test-case complexity.
+%
+Our definition is objective in the sense that it does not rely on subjective assessments of what features may challenge an AV to pass a test-case.
+%
+Instead, we rely directly and only on the pass-fail criteria.
+
+
+Second, we propose an algorithm to generate more-complex test-case scenarios.
+%
+Our technique can handle pass-fail criteria that regard the traffic rules and right-of-way at an intersection, in addition to goal-reach and collision avoidance.
+%
+Similar to~\cite{Karimi.2020}, we expect the traffic rules to be provided in a logic program (more precisely an Answer Set Program \cite{Lifschitz.2010}).
+%
+Our algorithm takes as input the geometry of the traffic intersection, traffic rules to be followed at the intersection, and the routes of the vehicles and generates several test-case scenarios with increasing order of complexity.
+%
+Our algorithm gives full coverage over some subspaces of the possible test-cases: after the set of lane events of two cars are fixed, there are only a finite number of relative temporal order of these events that may result in a more complex test-case, and our algorithm uses an ASP solver to do an exhaustive search over this subspace.
+
+
+Third, we generate test-cases for a four-way stop, a T-intersection, and an uncontrolled Y-intersection.
+%
+Then we execute these test-cases to test CARLA's autopilot and autopilot-plus-RSS in the CARLA simulator.
+%
+We incrementally increased the complexity of test-cases and discovered instances where the CARLA autopilot failed test-cases by violating a traffic rule or colliding with a non-ego vehicle.
+%
+Also we observed that restricting the behavior of CARLA's autopilot with RSS improved its rate of success, but did not guarantee passing a test-case.
+
+
+

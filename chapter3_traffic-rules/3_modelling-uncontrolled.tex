@@ -1,0 +1,38 @@
+\section{Modeling uncontrolled intersections}
+\label{sec:modeling_uncontrolled}
+Each rule is modeled with a first-order formula.
+A formula is a combination of atomic formulas,
+logical connectives and quantifiers.
+We identify some subformulas 
+that have an intuitive intended meaning
+as \emph{auxiliary predicates}.
+This is to simplify the expression of long formulas.
+
+Atomic formulas represent either \emph{events} or \emph{static facts}.
+The events and static facts are defined in terms of mathematical concepts,
+such as shapes, curves, sets, intersection, union, collision (the first time two sets intersect), etc.
+An \emph{event} is represented by a predicate with time as one of the arguments.
+A \emph{static fact} is represented by a predicate without time as an argument.
+
+We use Herbrand semantics to interpret the formulas \cite{Herbrand.2019}.
+A traffic scenario is described by
+a finite collection of ground atomic formulas which
+represent static facts and events.
+Therefor, traffic rules are grounded on traffic scenarios.
+This choice of semantics provides
+a more intuitive interpretation (than a Tarskian semantics.)
+Furthermore,
+implementation becomes straightforward using Answer Set Programming.
+
+In modeling traffic rules,
+we avoid using function symbols.
+Therefore,
+each Herbrand model (of some traffic rules and a traffic scenario) is finite.
+For example,
+the domain of a quantifier on a time variable $T$ is
+the set of all timestamps observed in the traffic scenario.
+
+\input{chapter3_traffic-rules/3-1_rules}
+\input{chapter3_traffic-rules/3-2_auxiliary}
+\input{chapter3_traffic-rules/3-3_events}
+\input{chapter3_traffic-rules/3-4_static}

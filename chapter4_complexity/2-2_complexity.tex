@@ -1,0 +1,89 @@
+\subsection{Test-cases and their complexity}
+
+%----test-case
+A \emph{test-case} is a partial scenario together with \emph{pass-fail criteria}.
+%
+Our pass-fail criteria consist of ego reaching its goal, avoiding collisions, and respecting the traffic rules.
+%
+The pass-fail criteria partitions a partial scenario (i.e. its corresponding set of fully specified scenarios) into two sets: scenarios that pass and scenarios that fail.
+%
+This is equivalent to partitioning the set of ego behaviors into those that pass and those that fail, since our partial scenarios specify everything in a scene except the state of ego.
+%
+A passing behavior of ego is a \emph{solution} of the test-case.
+%
+A test-case is \emph{solvable} if its solution set is nonempty.
+
+
+%---complexity
+The \emph{complexity} is characterized by the set of solutions to a test-case.
+%
+This induces a partial order on complexity via the subset relation.
+%
+In particular, if the solutions of test-case $B$ is a proper subset of the solutions of  test-case $A$, then $B$ is more complex that $A$.
+%
+The difference of the two solution sets characterizes the increase in complexity.
+%
+Note that solution sets and their difference are uncountably infinite sets due to the continuous parameters such as location, velocity, etc.
+%
+Therefore, most of these sets cannot be represented explicitly, and the subset relation cannot be checked directly.
+%
+Discretization of continuous variables does not help, for two reasons:
+%
+First, complexity would not be unique e.g. under one discretization the solution sets of two test-cases may be in a subset relation, but under another discretization the solution sets may be incomparable.
+%
+Second, a coarse discritization is unrealistic, while a fine discritization creates an enormous state space and does not help with representing the solution sets explicitly or computing the subset relation between them.
+%
+Therefore, we take a different approach to ensure that a generated test-case is more complex than a given test-case.
+
+
+%---comparability of complexity
+We ensure that the complexity of a generated test-case is equal to or more than (i.e. a subset of) the complexity of a given test-case, by not changing the behaviors of the old non-egos.
+%
+That is, keeping the behaviors of the old non-egos ensures that the old failing behaviors fail the new test-case as well.
+%
+That is, all colliding behaviors of ego remain colliding, and all right-of-way-violating behaviors of ego remain violating.
+%
+Therefore, we only add new non-egos.
+%
+New non-egos should not collide with the old non-egos since a collision may alter an old non-ego's trajectory.
+%
+Note that a new non-ego does not relieve ego from any right-of-way obligation that it already had to existing non-egos.
+%
+This is because each right-of-way rule refers only to a pair of vehicles and is indifferent to other vehicles.
+%
+In general, traffic rules also include \emph{precedence rules} where a higher priority rule makes a lower priority rule inapplicable to the traffic context.
+%
+In this situation, addition of a non-ego may not result in a subset relation between solution sets since it may introduce new solutions, in addition to possibly removing some solutions.
+%
+For example, a new non-ego ambulance may make a no-stopping sign inapplicable to ego.
+%
+Precedence rules are a challenge for controlling test-case complexity and are not addressed in this paper.
+
+
+%---increase in complexity
+We ensure that the complexity of a generated test-case is more than (i.e. a proper subset of) the complexity of a given test-case, as follows.
+%
+First we do not change the behaviors of old non-egos to ensure that the new complexity is a subset.
+%
+Second, we add one or more non-egos such that at least one solution to the old test-case fails the new test-case because it violates the right-of-way of one or more of the new non-egos.
+
+
+
+% For example, consider the following first-order sentence representing a hypothetical traffic rule:
+% \[\arraycolsep=1.4pt
+% \begin{array}{llll}
+% arrivedAtTime(V1, T) & \land & arrivedAtTime(V2, T) & \land \\
+% isOnRightOfAt(V2, V1, T) & \land & lessThan(T1, T2) & \land \\
+% enteredAtTime(V1, T1) & \land & enteredAtTime(V2, T2) \\
+% \rightarrow violatedRightOf(V1, V2).
+% \end{array}
+% \]
+% %
+% Now suppose that we have a test-case with a solution that has the events $arrivedAtTime(ego, 10)$ and $enteredAtTime(ego, 12)$.
+% %
+% To make this test-case more complex, we can add a non-ego $car2$ with the events $arrivedAtTime(car2, 10)$, $isOnRightOfAt(car2, ego, 10)$, and $enteredAtTime(car2, 13)$.
+% %
+% Then all the premises of the rule are true (where we have substituted the variables with the constants) which makes $violatedRightOf(ego, car2)$ true.
+% %
+% This makes the solution (of the given test-case) a failing behavior in the new test-case.
+

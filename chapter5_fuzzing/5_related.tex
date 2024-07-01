@@ -1,0 +1,63 @@
+\section{Related Work}
+There are several papers in the literature that focus on generating test scenarios for autonomous vehicles.
+% 
+These can be divided into two main classes.
+% 
+The first class includes papers that use mathematical logic and formal semantics for generating test scenarios.
+% 
+The second class includes papers that target a specific type of system failure such as a safety violation such as a collision or violation of a prescribed traffic behavior.
+% 
+% Make different sections and address related work in different sections.
+
+\subsection{Scenario Generation Using Formal Semantics}
+SCENIC is one of the first tools to present a probabilistic programming language for automatically generating test scenarios for autonomous vehicles~\cite{fremont2019scenic}.
+% 
+Given a high-level description of the configurations of the vehicles and the road network in a probabilistic programming language, SCENIC generates various scenes from the distribution described by the program.
+% 
+In contrast to SCENIC, the current work does not generate test scenarios according to a distribution, but rather to improve the predicate coverage of AVs.
+% 
+Some related works capture some functional aspects of AV behaviors such as adherence to traffic rules~\cite{maierhofer2020formalization} and safety violations~\cite{dreossi2019verifai} as statements in signal temporal logic~\cite{tuncali2016utilizing}.
+% 
+These works then use either fuzzing or falsification techniques for generating various test cases.
+% 
+Unlike these works, our goal is not to find just behaviors that violate the functional or safety specifications, but rather to explore a variety of ways in which an AV can violate the requirements e.g. traffic rules.
+% 
+Using formal semantics of traffic rules in custom logic~\cite{Karimi.2020, Bozga.2022} and generating test cases using these have been proposed in~\cite{karimi2022automatic,li2023simulation}.
+% 
+While the test scenarios generated in these works do increase coverage, these works are not explicitly driven to increase the coverage of AV behaviors.
+
+\subsection{Goal Driven Test Scenario Generation}
+Several works in the literature have been targeted towards generating test scenarios that violate the safety properties of AVs.
+% 
+These are again broadly classified into two classes.
+% 
+The first class consists of works that modify the perception inputs~\cite{tian2018deeptest,zhang2018deeproad} for an AV and observe the effect of the perception changes on the vehicle behavior.
+% 
+These works have been able to show that a change in environmental conditions can drastically change the behavior of AV and in some instances violate some crucial safety specifications.
+% 
+Some of the works also explicitly determine the \emph{features} that are important for perception in AVs, such as modifying the LiDAR image and not the camera image, etc~\cite{abdessalem2018testing}.
+% 
+The second class consists of works that modify the environment of an AV, such as introducing an obstacle or a pedestrian in its path, or modifying the behavior of other vehicles in the traffic configuration~\cite{Zhong.2021,li2020av}.
+% 
+Unlike the current work aimed at improving the coverage of the AV behaviors, the goal of these is to discover the maximum number of failure instances for AVs in a given traffic configuration.
+% 
+
+A few works look at the high level behavioral patterns of AVs and try to generate test inputs that break such rules.
+% 
+For example, test scenarios for AVs were synthesized in~\cite{gambi2019generating} based on real-life accidents.
+% 
+Similarly, when the traffic rules are formalized in STL, the most efficient test cases that break as many rules as possible are explored in~\cite{sun2022lawbreaker}.
+% 
+A recent work explores the most common driving patterns for AVs and generates scenarios according to these most common patterns~\cite{tian2022generating}.
+% 
+Some works also use generative models such as graph networks for generating highway traffic scenarios~\cite{Bi.2019}; however, these works lack explainability and do not necessarily target a behavioral pattern of AVs.
+% 
+Similar search for violations while making critical maneuvers such as turning or overtake using evolutionary search was explored in~\cite{luo2021targeting}
+%
+The work closest to ours are~\cite{sheikhi2022coverage,hu2021coverage} which tries to improve coverage but not in terms of high level behavior predicates but the physical space that is visited by the AV.
+% 
+Works that try to classify failures into different classes while AVs navigate through intersections have been explored in~\cite{tang2021systematic}.
+% 
+Some works combine the specification driven fuzzing together with modifying the environment to discover failure cases, such as~\cite{zhou2023specification,kim2022drivefuzz}.
+% 
+While all these works try to classify behaviors into various classes, these works are focused on finding failure instances and these do not try to focus on generating a diverse scenarios.
