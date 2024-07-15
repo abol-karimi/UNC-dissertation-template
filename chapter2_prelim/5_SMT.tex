@@ -1,1 +1,23 @@
-\section{Satisfiability-Module-Theory (SMT) Solving}
+\section{SMT Solving}
+The Satisfiability-Modulo-Theory (SMT) problem is an extension of the boolean satisfiability (SAT) problem, where instead of boolean propositions we can have first-order predicates with constant or variable terms.
+%
+Then the solution to an SMT problem is typically a choice of values for the variables such that the formula evaluates to True, or a proof that the formula is unsatisfiable.
+%
+The predicates are chosen from a formal theory, and each predicate evaluates to either True or False when the values of its terms are fixed, similar to boolean propositions, hence the name satisfiability-modulo-theory.
+
+
+
+In this dissertation we use off-the-shelf solvers, so we only need to know how to model a problem using an SMT language.
+%
+The SMT-LIB Standard \cite{Barrett.2010} proposes a standard language to enable portability of SMT specifications to different tools and solvers.
+%
+Here, we are only interested in the theory of nonlinear arithmetic, where we model trajectories with polynomials.
+%
+To make specification easier, PySMT \cite{PySMT.2015} provides Python classes to easily build SMT formulas using Python objects and syntax.
+%
+This is especially useful for theories of arithmetic since we can leverage Python's addition and multiplication operators to naturally specify arithmetic expressions and equations.
+%
+After building a formula in the form of a PySMT object, we can use PySMT's solver interface to pass the formula to a solver that PySMT supports, or to get the SMT-LIB representation from PySMT and pass it to our choice of SMT-LIB compatible solver.
+%
+The latter makes it more portable but then we have to convert the output of the solver back to Python, to do further computations.
+
