@@ -1,1 +1,45 @@
-% \section{Literature review}
+\section{Other Related Work}
+Autonomous vehicles are Cyber-Physical Systems.
+%
+However, the existing literature on CPS usually does not focus on end-to-end requirements of systems that interact with humans.
+%
+Traffic protocols for safe behavior of autonomous vehicles at intersections
+were proposed in~\cite{azimi2011vehicular,hafner2013cooperative}.
+%
+Approaches to formally verify such protocols using dynamic logic were developed in~\cite{loos2011safe}.
+%
+However, these papers focus on the safety predicate (safe separation of vehicles).
+%
+Unlike this dissertation,
+these works do not explicitly consider the high level traffic behaviors of vehicles.
+%
+Furthermore, such protocols rely on vehicle-to-vehicle (V2V) or vehicle-to-infrastructure (V2I) equipment and do not propose a solution where the agents are a mix of autonomous and human drivers.
+
+
+Reachability analysis verifies a CPS by computing the reachable set of states and examining it against the states corresponding to the requirements.
+%
+For example, if the reachable states include the goal, they count as a proof of progress towards the goal, and if they do no intersect the dangerous states, they count as a proof of safety.
+%
+In \cite{Ivanov.2020,Ivanov-verifying.2020}, an end-to-end neural-network controller is developed for an F1/10 race car.
+%
+It takes the raw LiDAR measurements as input and outputs the steering commands.
+%
+They perform safety and progress verification with respect to a single right-angle turn between two straight hallways.
+
+
+
+In \cite{Bohrer.2019} a Simplex architecture \cite{Seto.1998} is used to develop controllers with formal guarantees.
+%
+In this approach a \emph{monitor} is composed with an untrusted controller to check and correct its commands if they may lead to unsafe states.
+%
+They provide both safety and progress guarantees and the complexity of the tracks they use compare to ours.
+%
+However, they assume that a safe waypoint plan is provided, and the guarantees are for the waypoint-following controller only.
+%
+That is, the design of the planner is neither discussed nor verified.
+%
+Furthermore, their proofs are not fully automated and need human ingenuity to help in generating loop invariants and progress functions.
+%
+A recent line of work \cite{DBLP:conf/amcc/0002BD20,DBLP:conf/adhs/GoyalD18,DBLP:journals/automatica/GoyalD20,DBLP:journals/corr/abs-2311-15343}  explores characterizing these failure traces which can be useful in the control design.
+%
+These tools can be further complemented with state-space coverage and exploration techniques \cite{DBLP:journals/tcad/GoyalDD22,DBLP:conf/atva/0002D20,DBLP:phd/basesearch/Goyal22}.
