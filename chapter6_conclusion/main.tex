@@ -1,3 +1,134 @@
 \chapter[~~~~~~~~~~~~Conclusion]{Conclusion}
 \label{ch:conclusion}
 
+Despite the prevalence of companies testing their autonomous vehicles on the road, there is no consensus on end-to-end requirements for AV certification and testing.
+%
+This dissertation aimed to address some critical aspects of this mission, particularly focusing on the formulation of the traffic rules requirements and its compliance testing for AVs.
+%
+In Chapter 1, we presented our thesis as follows:
+\begin{quote}
+\textit{
+    Autonomous vehicles are required to have interpretable behavior. Formal logic can be used to give an intuitive but precise model of the traffic rules requirement. The model can be leveraged for verification and validation, namely in test-case generation and coverage arguments.
+}
+\end{quote}
+The key contributions of this work in support of the above thesis can be summarized as follows:
+
+    \textbf{Formulation of Traffic Rules in Formal Logic}.
+    We developed a comprehensive framework for representing traffic rules in first-order logic and answer-set programming.
+    %
+    This formalization allows incremental modeling of the traffic rules, which is a feature of non-monotonic reasoning.
+    %
+    Furthermore, it allows automated reasoning on traffic rules using off-the-shelf solvers.
+    %
+    We also developed an application of this framework, namely generating traffic-rules-compliant traffic in simulation.
+
+    \textbf{Development of Complexity-Driven Test-case Generation}.  
+    First, we proposed a formal definition of test-case complexity.
+    %
+    Our definition is objective in the sense that it does not rely on subjective assessments of what features may challenge an AV to pass a test-case.
+    %
+    Instead, we rely directly and only on the pass-fail criteria.
+    %
+    Second, we propose an algorithm to generate more-complex test-case scenarios.
+    %
+    Our technique can handle pass-fail criteria that regard the traffic rules and right-of-way at an intersection, in addition to goal-reach and collision avoidance.
+    %
+    Similar to~\cite{Karimi.2020}, we expect the traffic rules to be provided in a logic program (more precisely an Answer Set Program \cite{Lifschitz.2010}).
+    %
+    Our algorithm takes as input the geometry of the traffic intersection, traffic rules to be followed at the intersection, and the routes of the vehicles and generates several test-case scenarios with increasing order of complexity.
+    %
+    Our algorithm gives full coverage over some subspaces of the possible test-cases: after the set of lane events of two cars are fixed, there are only a finite number of relative temporal order of these events that may result in a more complex test-case, and our algorithm uses an ASP solver to do an exhaustive search over this subspace.
+    %
+    Third, we generate test-cases for a four-way stop, a T-intersection, and an uncontrolled Y-intersection.
+    %
+    Then we execute these test-cases to test CARLA's autopilot and autopilot-plus-RSS in the CARLA simulator.
+    %
+    We incrementally increased the complexity of test-cases and discovered instances where the CARLA autopilot failed test-cases by violating a traffic rule or colliding with a non-ego vehicle.
+    %
+    Also we observed that restricting the behavior of CARLA's autopilot with RSS improved its rate of success, but did not guarantee passing a test-case.
+
+    \textbf{Comparison of techniques for Coverage-Driven Test-case Scenario Generation}.
+    First, we proposed a new predicate coverage metric for AV behaviors that is explainable and can express several important aspects of their functional correctness.
+    % 
+    Second, we proposed coverage driven fuzzing algorithms for improving the predicate coverage of AV implementations at intersections.
+    % 
+    We demonstrated that fuzzing techniques that are driven by predicate coverage outperform code coverage and random fuzzing.
+    % 
+    Third, we investigated what type of coverage metrics and power schedules are more suitable for generating a diverse set of traffic scenarios.
+    % 
+    Finally, we investigated if test scenarios generated for one implementation can be used for other implementations and report our findings.
+    % 
+    We evaluated the algorithms in a robust manner by generating test cases for four different publicly available AV implementations on the CARLA platform.
+
+
+
+
+
+%----------------------------------------
+\section{Future Work}
+
+This dissertation lays the foundation for several directions for future research and development:
+%-----------------------------------
+\subsection{Coverage-driven Fuzzing}
+In this dissertation we examined the effectiveness of fuzzing for coverage-driven test-case generation and got encouraging results.
+%
+We propose a few more research questions in this direction.
+
+%----------------------
+\textbf{Nonego Models.}
+The first question is, what nonego models are suitable for the fuzzing framework?
+%
+In this dissertation we used BSplines for representing trajectories, for their \emph{local control property} which allows mutation-based local search, their compact representation using the control points, and their richness which subsumes the class of kinematically/dynamically feasible trajectories.
+%
+An interesting alternative is representation using Behavior Trees.
+%
+This representation is widely used in robotics and video games since it allows modeling reactive agents, it is modular and interpretable, and allows using other models as building blocks.
+%
+The modularity of behavior trees is helpful for fuzzing as it allows structure-aware mutation operators.
+%
+Another curious alternative is data-driven models, e.g. generative models in machine learning.
+%
+Having such models, we can investigate the question of whether fuzzing the generative model would help with predicate coverage, compared to the baseline of randomly sampling from the generative model.
+%
+On possible challenge here is that the scenario encodings in generative models are usually unstructured, represented simply as a vector of numbers, which prohibits using structure-aware mutation.
+
+%-----------------------------------------
+\textbf{Transfer of Coverage between AVs.}
+In this dissertation we observed an asymmetric transfer of coverage between the rule-based agents and the learning-based agent.
+%
+This encourages further investigations, which would require integrating more machine-learning-based AV agents into our CARLA platform.
+%
+Another interesting question is, whether the transfer of coverage depends on the nonego models (BSplines, behavior trees, etc.)
+
+
+
+%-----------------------------------
+\subsection{Complexity-driven Testing}
+In this dissertation we proposed a formal notion of complexity, capturing the difficulty level of passing a test-case.
+%
+We believe that the formal definition is powerful in the sense that it directly captures the informal notion of test-case difficulty level.
+%
+However, this generality comes with the representation and computation challenges.
+%
+In our work, we studied some special cases where we can compute the complexity partial order exactly.
+% 
+However, in many applications we rather have more flexibility in which special cases we can work with, at the expense of tolerating some error in computing the complexity relation.
+%
+To give an analogy, we may prefer to work with polynomials for their nice analytical and computational properties at the expense of tolerating the error caused by approximating the target functions with polynomials.
+%
+The key here is that we want the error to be bounded, because if there is no bound then `approximation' looses its meaning.
+%
+This setup leads to several research questions.
+%
+For example, how can we quantify complexity and compute it?
+%
+In particular, in what cases the complexity partial order is a finite order?
+%
+In what cases the partial order is countably infinite?
+
+
+
+%-------------------
+\section{Conclusion}
+
+In conclusion, this dissertation makes significant strides towards the certification of autonomous vehicles by formulating robust requirements and testing methodologies. The proposed framework enhances AV safety and compliance, contributing to the broader goal of integrating AVs into our transportation systems. As the field continues to evolve, the insights and tools developed in this research will serve as valuable resources for researchers, industry stakeholders, and regulatory bodies, driving further advancements in AV technology and certification.

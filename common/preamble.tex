@@ -27,8 +27,8 @@
 \usepackage[hang,flushmargin]{footmisc}
 
 % Citation style
-\usepackage[square,comma,sort&compress]{natbib}
-%\usepackage{apalike}
+% \usepackage[square,comma,sort&compress]{natbib}
+\usepackage{apalike}
 
 %\usepackage[T1]{fontenc}
 
@@ -171,7 +171,7 @@ itemsep=1pt, topsep=2pt]}
 \hyphenation{Interface}
 
 % PDF links
-\usepackage[hidelinks,pdfauthor={Alyssa Byrnes}, pdfpagemode={UseOutlines}]{hyperref} % backref=page
+\usepackage[hidelinks,pdfauthor={Abolfazl Karimi}, pdfpagemode={UseOutlines}]{hyperref} % backref=page
 
 % PDF version
 \pdfminorversion=7 % doesn't seem to work
@@ -181,3 +181,5 @@ itemsep=1pt, topsep=2pt]}
 
 \usepackage{pdfcomment}
 
+\usepackage{minted}
+\newmintinline[clingo]{prolog}{fontsize=\footnotesize}

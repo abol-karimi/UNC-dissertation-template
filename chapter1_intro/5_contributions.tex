@@ -1,3 +1,56 @@
 \section{Contributions}
 
-The main contributions of this thesis are...
+The main contributions of this thesis are as follow.
+
+\textbf{Formulation of Traffic Rules in Formal Logic}.
+We developed a comprehensive framework for representing traffic rules in first-order logic and answer-set programming.
+%
+This formalization allows incremental modeling of the traffic rules, which is a feature of non-monotonic reasoning.
+%
+Furthermore, it allows automated reasoning on traffic rules using off-the-shelf solvers.
+%
+We also developed an application of this framework, namely generating traffic-rules-compliant traffic in simulation.
+
+
+
+
+\textbf{Development of Complexity-Driven Test-case Generation}.  
+First, we proposed a formal definition of test-case complexity.
+%
+Our definition is objective in the sense that it does not rely on subjective assessments of what features may challenge an AV to pass a test-case.
+%
+Instead, we rely directly and only on the pass-fail criteria.
+%
+Second, we propose an algorithm to generate more-complex test-case scenarios.
+%
+Our technique can handle pass-fail criteria that regard the traffic rules and right-of-way at an intersection, in addition to goal-reach and collision avoidance.
+%
+Similar to~\cite{Karimi.2020}, we expect the traffic rules to be provided in a logic program (more precisely an Answer Set Program \cite{Lifschitz.2010}).
+%
+Our algorithm takes as input the geometry of the traffic intersection, traffic rules to be followed at the intersection, and the routes of the vehicles and generates several test-case scenarios with increasing order of complexity.
+%
+Our algorithm gives full coverage over some subspaces of the possible test-cases: after the set of lane events of two cars are fixed, there are only a finite number of relative temporal order of these events that may result in a more complex test-case, and our algorithm uses an ASP solver to do an exhaustive search over this subspace.
+%
+Third, we generate test-cases for a four-way stop, a T-intersection, and an uncontrolled Y-intersection.
+%
+Then we execute these test-cases to test CARLA's autopilot and autopilot-plus-RSS in the CARLA simulator.
+%
+We incrementally increased the complexity of test-cases and discovered instances where the CARLA autopilot failed test-cases by violating a traffic rule or colliding with a non-ego vehicle.
+%
+Also we observed that restricting the behavior of CARLA's autopilot with RSS improved its rate of success, but did not guarantee passing a test-case.
+
+
+
+
+\textbf{Comparison of techniques for Coverage-Driven Test-case Scenario Generation}.
+First, we proposed a new predicate coverage metric for AV behaviors that is explainable and can express several important aspects of their functional correctness.
+% 
+Second, we proposed coverage driven fuzzing algorithms for improving the predicate coverage of AV implementations at intersections.
+% 
+We demonstrated that fuzzing techniques that are driven by predicate coverage outperform code coverage and random fuzzing.
+% 
+Third, we investigated what type of coverage metrics and power schedules are more suitable for generating a diverse set of traffic scenarios.
+% 
+Finally, we investigated if test scenarios generated for one implementation can be used for other implementations and report our findings.
+% 
+We evaluated the algorithms in a robust manner by generating test cases for four different publicly available AV implementations on the CARLA platform.

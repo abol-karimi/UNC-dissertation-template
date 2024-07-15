@@ -33,7 +33,7 @@ provides flexibility to incorporate various types of traffic rules in the driver
 Intersections are the main area where accidents happen.
 According to the Fatality Analysis Reporting System (FARS) and National Automotive Sampling System-General Estimates System (NASS-GES) data, at least 47\% of the estimated 11,275,000 crashes in the United States in 2015 \cite{DOT.2017} were intersection-related.
 Furthermore,
-most of the accidents involving autonomous vehicles also happened at intersections~\cite{CADMVdocumentation,nhtsareport}.
+most of the accidents involving autonomous vehicles also happened at intersections~\cite{CADMVdocumentation,NHTSA.2017}.
 According to Federal Highway Administration, ``unsignalized intersections are of particular concern because they comprise the vast majority of intersections in the U.S.''\cite{FHWA-Unsignalized.2019}
 The rules for \emph{uncontrolled intersections} (i.e. without ``STOP'' or ``YIELD'' signs)
 apply to all types of conventional unsignalized intersections.
@@ -47,7 +47,7 @@ To show the practicality of this approach, we encode the traffic rules in logic 
 Using this framework, one can decide whether a given action of a vehicle in a traffic scenario respects all the traffic rules.
 Further, one can also design a \emph{correct controller} such that all of its actions will respect the traffic rules. 
 We integrate this correct controller into the CARLA simulator and simulate various traffic scenarios at various four-way and three-way intersections.
-CARLA\cite{Dosovitskiy.2017} is an open-source simulator for autonomous driving research.
+CARLA \cite{Dosovitskiy.2017} is an open-source simulator for autonomous driving research.
 Starting at CVPR 2019 (Computer Vision and Pattern Recognition) conference, CARLA organizes the CARLA Autonomous Driving Challenge \cite{CARLA-Challenge.2019}.
 To create a traffic environment, CARLA has a built-in vehicle driver called \emph{autopilot}.
 For unsignalized intersections,

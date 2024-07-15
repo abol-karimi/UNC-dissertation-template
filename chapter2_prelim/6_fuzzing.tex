@@ -1,1 +1,52 @@
 \section{Fuzz Testing}
+
+Fuzz testing or simply \emph{fuzzing} is a random search technique in the space of inputs to a system under test (SUT).
+%
+The search starts from a set of provided inputs called \emph{seeds}, where each seed is executed on SUT and some information about the execution is collected as \emph{feedback}.
+%
+Based on the feedback, more test inputs are generated and executed on the SUT.
+%
+This loop continues until a \emph{stopping criterion} is met.
+%
+The criterion can be simply a timeout, the number of loop iterations, or more generally a property of the set of inputs generated or the set of execution information from all SUT executions.
+%
+The whole fuzzing run, starting with the seeds and ending when a stopping criterion is met, is called a \emph{fuzzing campaign}.
+%
+The output of a fuzzing campaign is a subset of the generated inputs, optionally including the seeds, called a \emph{corpus}.
+%
+The corpus is basically a test-suite.
+%
+When a generated input is \emph{interesting} in some sense, it is added to the corpus.
+%
+In \emph{coverage-driven} fuzzing, a \emph{coverage-space} is defined based on the execution information and whenever a new coverage item is discovered the corresponding input is added to the corpus.
+%
+Another approach is to add any any \emph{valid} generated input to the corpus.
+%
+A \emph{valid} input is an input to the SUT that is of the correct type, i.e. the SUT must be able to executed it.
+%
+The invalidity of an input might reveal during the SUT execution.
+%
+Note that a mutation of a valid input may generate an invalid input.
+%
+In this dissertation, we add all valid inputs to the corpus, since simulation of SUT is very expensive and the validity of mutants can be ascertained only after the execution of SUT.
+%
+In \emph{coverage-guided} fuzzing, a coverage-space is defined on the execution information and fed back to the input generated.
+%
+Note the difference between coverage-driven and coverage-guided, the two coverage-spaces don't have to be the same.
+
+
+
+Based on the type of feedback information, fuzzing can be categorized to three types: Blackbox, Greybox, and Whitebox.
+%
+In \emph{blackbox fuzzing}, the only feedback is whether SUT failed or successfully executed the input.
+%
+In \emph{whitebox fuzzing}, the source code of SUT is available and information about its execution is used as feedback.
+%
+In \emph{greybox fuzzing}, only some aspects of the SUT's execution is observed and used as feedback, for example we can instrument SUT's binary and collect execution information of the added code.
+%
+Fuzzing can also be categorized based on how new inputs are generated.
+%
+A common method is using random mutations, thus the category \emph{mutation-based fuzzing}.
+%
+In this dissertation we focus on greybox mutation-based fuzzing.
+

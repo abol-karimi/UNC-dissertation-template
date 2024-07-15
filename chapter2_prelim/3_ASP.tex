@@ -1,1 +1,61 @@
 \section{Answer-Set Programming (ASP)}
+Answer Set Programming is a form of logic programming.
+%
+\emph{Logic programming} is a declarative computing paradigm where the programmer focuses on specifying \emph{what} the goal is rather than \emph{how} to achieve it.
+%
+A \emph{logic solver} is responsible for determining how the goal can be achieved or whether the goal is achievable.
+%
+Answer Set Programming came out of the classical approaches to artificial intelligence of using logic to define agents.
+%
+In particular, ASP emerged as a solution to the \emph{frame problem}:
+\begin{quote}
+    The frame problem is a difficulty that arises when we attempt to represent the effects of actions and events in formal logic. It concerns the apparent need to represent large numbers of intuitively obvious facts about things that do not change when actions are performed. \cite{Shanahan.1997}
+\end{quote}
+A distinctive feature of Answer Set Programming is that it admits \emph{non-monotonic reasoning}.
+%
+This paradigm allows incremental axiomatization of a system, as more knowledge about the system becomes available.
+%
+That is, when new facts, rules, or design choices about the system become known, we do not need to re-design the formal model from scratch, but we can amend the model with minimal change.
+%
+For a thorough development of this paradigm, see \cite{Shanahan.1997}.
+
+
+In this dissertation, we use Potassco, the Potsdam Answer Set Programming Collection \cite{Potassco.2024}.
+%
+In particular, we use Clingo to implement answer set programs.
+%
+Here is a brief introduction to Clingo-style ASP.
+%
+An ASP \emph{program} is a collection of \emph{rules} of the form:
+\begin{center}
+\clingo{h :- p_1, ..., p_n, not p_{n+1}, ..., not p_{n+m}.}
+\end{center}
+%
+We call \clingo{h} the \emph{head} of the rule, and the list after \clingo{:-} is the \emph{body} of the rule.
+%
+The intended meaning of the above rule is
+$$ p_1 \land \dots \land p_n \land  \neg p_{n+1} \land \dots \land \neg p_{n+m} \rightarrow h $$
+%
+Here each \emph{condition} $p_i$, as well as $h$, is an \emph{atomic predicate} over constants and variables.
+%
+An atomic predicate or a rule is \emph{ground} if it has no variables.
+%
+A \emph{fact} is a ground rule with no conditions.
+%
+A rule is used to infer more facts, except if the head is empty.
+%
+If the head is empty, we get a \emph{constraint} which means that the conjunction of predicates $p_1 \ldots \neg p_{n+m}$ should not hold true.
+%
+A \emph{choice rule}, which is a syntactic sugar, is a rule where the head is a list of predicates to choose from.
+%
+In particular,
+\begin{center}
+\clingo{{ h_1, ..., h_k } = N :- p_1, ..., not p_{n+m}.}
+\end{center}
+specifies that exactly \clingo{N} predicates from the list \clingo{h_1, ..., h_k} must be inferred if the body of the rule is true.
+%
+The domains of variables are determined using Herbrand semantics \cite{Herbrand.2019}, that is from all the constants mentioned in the program.
+%
+Given an ASP program, the ASP solver finds a set of facts (i.e. an \emph{answer set}) that is closed under the rules of the program.
+%
+If no such set exists, the ASP solver returns that the program is \emph{unsatisfiable}.

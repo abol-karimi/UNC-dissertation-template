@@ -1,1 +1,43 @@
 \section{Scenario-based Testing}
+
+The certification problem involves verifying that the system complies to a specification.
+%
+Testing is often adopted over formal methods for verification, due to the complexity of autonomous vehicles.
+%
+\emph{Scenario-based} testing \cite{Riedmaier.2020} is used to test an AV at the system level.
+%
+A \emph{scenario} describes the input and output of the AV over a period of time \cite{Ulbrich.2015}.
+%
+Pass/fail criteria and metrics are used to assess the outcome of a test-case, for example collisions,  compliance to traffic rules, Time-To-Collision (TTC), etc.
+%
+\emph{Simulation-based testing} \cite{Abdessalem.2018:feature,Abdessalem.2018:vision,Abeysirigoonawardena.2019,Abdessalem.2016,Ding.2020,Gambi.2019,Norden.2019} is essential for several reasons: limited testing budget, safety concerns of real-world testing, reproducibility, etc.
+%
+\emph{Scenario generation} is used to automatically design test-cases.
+%
+Automatic generation is motivated by the cost of manual test-case design, complexity of system under test (SUT), the size of possible scenarios, etc.
+%
+Since the set of possible scenarios is infinite and the testing budget is limited, test-suits with particular properties are targeted.
+%
+These properties include \emph{coverage} \cite{Sheikhi.2022}, \emph{complexity} \cite{Gao.2019,Xia.2017,Xia.2018,Wang.2018},
+ \emph{dis-similarity} \cite{Harder.2021}, \emph{criticality} \cite{Klischat.2019,Zhong.2021}, \emph{corner cases} \cite{OKelly.2018}, \emph{naturalistic} \cite{Akagi.2019}
+ etc.
+%
+Generation techniques include a variety of algorithmic paradigms such as  knowledge-based methods \cite{Li.2020}, data-driven methods \cite{OKelly.2018}, optimization-based search \cite{Klischat.2020,Feng_Methodology.2020,Feng_CaseStudies.2020}, evolutionary algorithms \cite{Klischat.2019,Calo.2020,Zhong.2021,Sheikhi.2022}, synthesis from formal specification \cite{Klischat.2020,Tuncali.2019}, probabilistic search \cite{Fremont_testing.2020,Tuncali.2016}, combinatorial search \cite{Tuncali.2019,Gao.2019,Xia.2018}, etc.
+%
+While there are several work on generating test-cases for the collision aspect, there are limited work on the traffic rules aspect.
+%
+In particular, there is no work on the complexity aspect of traffic rules, to the best of our knowledge.
+%
+Complexity can be used to guide the test-case generation towards finding bugs by reducing SUT's options to pass a test-case.
+%
+Furthermore, it can serve as a way of comparing different AVs or versions of the same AV, by being agnostic to the SUT.
+
+
+%---Coverage---
+\emph{Coverage} \cite{Tahir.2020,Tahir.2022,Xia.2018,Hawkins.2019,Majzik.2019,Tang.2021} is a major notion in guiding test-case generation.
+%
+A coverage criteria may be of type \emph{scenario coverage}, \emph{situation coverage}, or \emph{requirements coverage} \cite{Tahir.2020}, to name a few.
+%
+A coverage notion typically partitions the space of possible scenarios into equivalence classes.
+%
+Then the goal of the scenario generation is to maximize the number of non-equivalent scenarios.

@@ -1,1 +1,30 @@
-\section{First-order Logic}
+\section{First-Order Logic}
+We assume familiarity with \emph{propositional logic} and give an informal introduction to first-order logic.
+%
+A \emph{predicate} is a relation applied to some arguments.
+%
+The arguments of a predicate are called \emph{terms} and are interpreted as objects, whereas the predicate itself is interpreted as true or false, i.e. interpreted as a statement.
+%
+For example, summation can be seen as a relation between three arguments: two summands and the sum.
+%
+Therefore $+(2, 7, 9)$ is a $3$-ary predicate applied to terms $2, 7, 9$, which would be interpreted as the true statement $2+7=9$ over natural numbers.
+%
+A \emph{first-order quantifier} specifies the domain of values of a variable term.
+%
+For example, $\forall x \forall y \forall z (+(x, y, z) \rightarrow +(y, x, z))$ states that the formula $+(x, y, z) \rightarrow +(y, x, z)$ is true no matter what objects the variables $x, y, z$ will be interpreted as.
+%
+That is, $\forall$ is a \emph{universal} quantifier.
+%
+This represents the commutativity of the sum relation over natural numbers.
+%
+Similarly, $\exists x +(2,x,5)$ states that there is at least one interpretation for $x$ such that $2+x=5$.
+%
+That is, $\exists$ is an \emph{existential} quantifier.
+%
+In contrast, $\forall R \forall x \forall y ( R(x, y) \rightarrow R(y, x))$ is a \emph{second-order} formula since the predicate $R$ is quantified.
+%
+Recall that a \emph{propositional logic} is a set of formulas, namely a set of (atomic) propositions, closed under boolean connectives.
+%
+Similarly, a \emph{predicate logic} is a set of predicates, closed under boolean connectives and under quantifiers.
+%
+A predicate logic is \emph{first-order} if all the quantifiers are first-order.

@@ -1,11 +1,11 @@
 \subsection{Evaluation Set-up}
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=50mm]{figures/4way-stopOnAll.jpg}
-%     \caption{Multi-lane four-way stop}
-%     \label{fig:4way-stopOnAll}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=50mm]{figures/chapter5/4way-stopOnAll.jpg}
+    \caption{Multi-lane four-way stop}
+    \label{fig:4way-stopOnAll}
+\end{figure}
 
 For evaluating the effectiveness of fuzzing in generating a diverse set of inputs, we consider a multi-lane four-way intersection, with two incoming lanes and two outgoing lanes from each side, such as the one provided in Figure~\ref{fig:4way-stopOnAll}.
 % 
@@ -54,7 +54,7 @@ A test-case also specifies the turn-signal events of each non-ego, as a list of 
 %------------------------------------------------------
 \subsubsection{Seeds}
 
-The initial fuzzing seeds are randomly sampled using a probabilistic programming language called SCENIC \cite{Fremont.2020}.
+The initial fuzzing seeds are randomly sampled using a probabilistic programming language called SCENIC \cite{Fremont.2023}.
 %
 A SCENIC scenario specifies a distribution over scenarios, and SCENIC's generator samples from this distribution.
 %
@@ -97,7 +97,7 @@ For repeatability, we seed the pseudo-random number generators (PRNGs) before st
 %
 For statistical validity, each experiment is tried 10 times, where each trial is run with a different PRNG seed.
 %
-We run all the experiments on a SLURM-managed HPC cluster.
+We run all the experiments on a Slurm-managed HPC cluster.
 %
 Each fuzzing campaign is run for 24 hours.
 %
